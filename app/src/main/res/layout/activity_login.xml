@@ -1,4 +1,4 @@
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -8,52 +8,82 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:id="@+id/layout_login">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/llFields"
-        android:src="@drawable/logo" />
-
-    <LinearLayout
-        android:id="@+id/llFields"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical" >
+        android:layout_height="match_parent"
+        android:background="@drawable/background"
+        tools:context=".LoginActivity">
 
-        <EditText
-            android:id="@+id/etLogin"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/llFields"
+            android:src="@drawable/logo" />
+
+        <LinearLayout
+            android:id="@+id/llFields"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/login_etLogin"
-            style="@style/CustomEditText" />
+            android:layout_centerVertical="true"
+            android:orientation="vertical" >
 
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:hint="@string/login_etPassword"
-            style="@style/CustomEditText" />
+            <EditText
+                android:id="@+id/etLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/login_etLogin"
+                style="@style/CustomEditText" />
+
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="@string/login_etPassword"
+                style="@style/CustomEditText" />
+
+            <Button
+                android:id="@+id/btLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login_btLogin"
+                style="@style/PrimaryButton"  />
+
+        </LinearLayout>
 
         <Button
-            android:id="@+id/btLogin"
+            android:id="@+id/btSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/login_btLogin"
-            style="@style/PrimaryButton"  />
+            android:layout_alignParentBottom="true"
+            android:text="@string/login_btSignup"
+            android:textColor="#000000"
+            style="@android:style/Widget.Holo.Button.Borderless"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <Button
-        android:id="@+id/btSignup"
+    <RelativeLayout
+        android:id="@+id/loading"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="@string/login_btSignup"
-        android:textColor="#000000"
-        style="@android:style/Widget.Holo.Button.Borderless"/>
+        android:layout_height="match_parent"
+        android:background="#64000000"
+        android:visibility="gone">
 
-</RelativeLayout>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            style="?android:attr/progressBarStyleLarge"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

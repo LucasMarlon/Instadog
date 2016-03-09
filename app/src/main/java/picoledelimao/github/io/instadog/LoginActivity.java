@@ -1,6 +1,8 @@
 package picoledelimao.github.io.instadog;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import picoledelimao.github.io.instadog.utils.HttpListener;
+import picoledelimao.github.io.instadog.utils.HttpUtils;
+
 /**
  * This activity describes the actions taken on login screen
  * @author Abner M. C. Araujo
@@ -21,6 +29,9 @@ import android.widget.EditText;
  */
 public class LoginActivity extends AppCompatActivity {
 
+    private HttpUtils mHttp;
+    private View mLoading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -28,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
 
+        mHttp = new HttpUtils(this);
+        mLoading = findViewById(R.id.loading);
         Button btSignup = (Button) findViewById(R.id.btSignup);
         btSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,10 +70,65 @@ public class LoginActivity extends AppCompatActivity {
      *      Password filled in the password field
      */
     private void login(String login, String password) {
-        // TODO Replace the body of this method with the correct implementation
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        mLoading.setVisibility(View.VISIBLE);
+        String url = "http://instadog-lucasmarlon.rhcloud.com/login";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("login", login);
+            json.put("senha", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mHttp.post(url, json.toString(), new HttpListener() {
+            @Override
+            public void onSucess(JSONObject result) {
+                try {
+                    if (result.getInt("ok") == 0) {
+                        new AlertDialog.Builder(LoginActivity.this)
+                                .setTitle("Erro")
+                                .setMessage(result.getString("msg"))
+                                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        mLoading.setVisibility(View.GONE);
+                                    }
+                                })
+                                .create()
+                                .show();
+                    } else {
+                        new AlertDialog.Builder(LoginActivity.this)
+                                .setTitle("Sucesso")
+                                .setMessage("Login realizado com sucesso")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                        finish();                                }
+                                })
+                                .create()
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onTimeout() {
+                new AlertDialog.Builder(LoginActivity.this)
+                        .setTitle("Erro")
+                        .setMessage("Conexão não disponível.")
+                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mLoading.setVisibility(View.GONE);
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        });
     }
 
 }
